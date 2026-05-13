@@ -1,0 +1,34 @@
+{
+  "name": "enfoeduca-backend",
+  "version": "1.0.0",
+  "description": "EnfoEduca LMS Backend - Node.js + Express + MongoDB",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "micro": "concurrently \"npm run gateway\" \"npm run auth\" \"npm run academic\" \"npm run user\"",
+    "gateway": "node gateway/gateway.js",
+    "auth": "node services/auth/index.js",
+    "academic": "node services/academic/index.js",
+    "user": "node services/user/index.js",
+    "seed": "node seeds/seed.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "compression": "^1.8.1",
+    "concurrently": "^9.2.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.0",
+    "express-rate-limit": "^8.5.1",
+    "http-proxy-middleware": "^4.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "memory-cache": "^0.2.0",
+    "mongoose": "^8.7.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "socket.io": "^4.7.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
