@@ -1,0 +1,47 @@
+# =========================
+# GLOBAL
+# =========================
+node_modules/
+.env
+.env.*
+*.log
+*.class
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Evaluación
+evaluacion_proyecto.md
+
+# =========================
+# BACKEND
+# =========================
+backend/npm-debug.log*
+
+# =========================
+# FRONTEND (FLUTTER / DART)
+# =========================
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.packages
+frontend/.pub-cache/
+frontend/.pub/
+frontend/build/
+frontend/coverage/
+**/doc/api/
+**/ios/Flutter/.last_build_id
+app.*.symbols
+app.*.map.json
+
+# Flutter generated ios
+frontend/ios/Pods/
+frontend/ios/.symlinks/
+frontend/ios/Flutter/Flutter.framework
+frontend/ios/Flutter/Flutter.podspec
+
+# Android build
+frontend/android/app/debug
+frontend/android/app/profile
+frontend/android/app/release
