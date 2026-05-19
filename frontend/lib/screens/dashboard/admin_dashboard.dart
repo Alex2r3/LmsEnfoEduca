@@ -764,7 +764,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         child: TextFormField(
                           controller: firstNameController,
                           decoration: const InputDecoration(labelText: 'Nombre', prefixIcon: Icon(Icons.person_outline)),
-                          validator: (v) => (v == null || v.trim().isEmpty) ? 'Requerido' : null,
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) return 'Requerido';
+                            if (!RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$').hasMatch(v.trim())) {
+                              return 'Solo letras y espacios';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                       const SizedBox(width: 16),
@@ -772,7 +778,13 @@ class _AdminDashboardState extends State<AdminDashboard> {
                         child: TextFormField(
                           controller: lastNameController,
                           decoration: const InputDecoration(labelText: 'Apellido', prefixIcon: Icon(Icons.person_outline)),
-                          validator: (v) => (v == null || v.trim().isEmpty) ? 'Requerido' : null,
+                          validator: (v) {
+                            if (v == null || v.trim().isEmpty) return 'Requerido';
+                            if (!RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s]+$').hasMatch(v.trim())) {
+                              return 'Solo letras y espacios';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ],
@@ -781,14 +793,25 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   TextFormField(
                     controller: emailController,
                     decoration: const InputDecoration(labelText: 'Email institucional', prefixIcon: Icon(Icons.email_outlined)),
-                    validator: (v) => (v == null || !v.contains('@') || v.trim().isEmpty) ? 'Email inválido' : null,
+                    validator: (v) {
+                      if (v == null || v.trim().isEmpty) return 'Requerido';
+                      if (!v.contains('@')) return 'Email inválido';
+                      if (v.contains(' ') || v.contains('\u00a0')) return 'No se permiten espacios';
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
                   TextFormField(
                     controller: passwordController,
                     obscureText: true,
                     decoration: const InputDecoration(labelText: 'Contraseña temporal', prefixIcon: Icon(Icons.lock_outline)),
-                    validator: (v) => (v == null || v.length < 8 || v.trim().isEmpty) ? 'Mínimo 8 caracteres' : null,
+                    validator: (v) {
+                      if (v == null || v.trim().isEmpty) return 'Requerido';
+                      if (v.length < 8) return 'Mínimo 8 caracteres';
+                      if (!RegExp(r'\d').hasMatch(v)) return 'Debe contener al menos un número';
+                      if (v.contains(' ') || v.contains('\u00a0')) return 'No se permiten espacios';
+                      return null;
+                    },
                   ),
                   const SizedBox(height: 20),
                   DropdownButtonFormField<String>(

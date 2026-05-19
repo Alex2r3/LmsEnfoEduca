@@ -445,7 +445,7 @@ Para simular el comportamiento del backend alojado en **Google Cloud Run** bajo 
 *   **Loop Count**: `1` (Cada usuario virtual realiza 10 ciclos de peticiones).
 
 #### 2. Definición del HTTP Request Defaults:
-*   **Protocol**: `https`
+*   **Protocol**: `http`
 *   **Server Name or IP**: `[URL-DE-TU-CLOUD-RUN].run.app` (o `localhost` en desarrollo)
 *   **Port**: `443` (para HTTPS) o `5000` (en local)
 
