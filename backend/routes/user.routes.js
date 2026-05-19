@@ -7,7 +7,7 @@ const { authenticate, authorize } = require('../middleware/auth');
 router.get('/', authenticate, authorize('admin'), async (req, res) => {
   try {
     const { role, search, page = 1, limit = 20 } = req.query;
-    const query = {};
+    const query = { isActive: { $ne: false } };
     
     if (role) query.role = role;
     if (search) {

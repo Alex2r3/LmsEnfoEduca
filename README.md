@@ -6,7 +6,7 @@ Esta versión de EnfoEduca ha sido optimizada para soportar cargas de **50,000+ 
 
 ### 🚀 1. Backend (Arquitectura de Microservicios)
 - **Compresión de Respuesta**: Se implementó `compression` (Gzip/Brotli) en todos los servicios, reduciendo el peso de los JSON en un ~70%.
-- **Rate Limiting**: El API Gateway ahora protege el sistema contra ataques DoS y fuerza bruta usando `express-rate-limit` (100 req/15min por IP).
+- **Rate Limiting**: El API Gateway ahora protege el sistema contra ataques DoS y fuerza bruta usando `express-rate-limit` (500 req/15min por IP).
 - **Caching Layer**: Se integró un middleware de caché en memoria (`memory-cache`) que reduce la carga de la DB en un 90% para datos frecuentes como dashboards y listas de cursos.
 - **Stateless Design**: Autenticación 100% via JWT, permitiendo el escalado horizontal sin pérdida de sesión.
 

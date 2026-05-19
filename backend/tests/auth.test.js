@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 describe('Pruebas Unitarias - Seguridad y Autenticación', () => {
   
@@ -26,5 +27,20 @@ describe('Pruebas Unitarias - Seguridad y Autenticación', () => {
     // Simular contraseña incorrecta
     const isNotMatch = await bcrypt.compare('ContraseñaEquivocada', hashedPassword);
     expect(isNotMatch).toBe(false);
+  });
+
+  test('Debería generar y verificar un token JWT correctamente', () => {
+    const payload = { id: 'test_user_id', role: 'alumno' };
+    const secret = 'test_jwt_secret_key_2026';
+    
+    // Generar token JWT
+    const token = jwt.sign(payload, secret, { expiresIn: '1h' });
+    expect(token).toBeDefined();
+    expect(typeof token).toBe('string');
+    
+    // Verificar token JWT
+    const decoded = jwt.verify(token, secret);
+    expect(decoded.id).toBe(payload.id);
+    expect(decoded.role).toBe(payload.role);
   });
 });

@@ -203,7 +203,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
   void _showUserList(BuildContext context, String role, String title, bool isAura) {
     showDialog(
       context: context,
-      builder: (context) => Dialog(
+      builder: (dialogContext) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
         child: Container(
           constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
@@ -212,80 +212,86 @@ class _AdminDashboardState extends State<AdminDashboard> {
             color: isAura ? const Color(0xFF1E1E3F) : Colors.white,
             borderRadius: BorderRadius.circular(28),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: StatefulBuilder(
+            builder: (context, setDialogState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    'Lista de $title',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: isAura ? Colors.white : Colors.black87),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Lista de $title',
+                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: isAura ? Colors.white : Colors.black87),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.close, color: isAura ? Colors.white70 : Colors.black54),
+                        onPressed: () => Navigator.pop(dialogContext),
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    icon: Icon(Icons.close, color: isAura ? Colors.white70 : Colors.black54),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                ],
-              ),
-              Divider(color: isAura ? Colors.white10 : Colors.grey.shade200),
-              Flexible(
-                child: FutureBuilder<List<User>>(
-                  future: context.read<UserProvider>().getUsersByRole(role),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-                    final users = snapshot.data ?? [];
-                    if (users.isEmpty) {
-                      return Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.person_off_outlined, size: 64, color: Colors.grey.shade300),
-                            const SizedBox(height: 16),
-                            Text('No hay $title registrados', style: const TextStyle(color: Colors.grey)),
-                          ],
-                        ),
-                      );
-                    }
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: users.length,
-                      itemBuilder: (context, index) {
-                        final user = users[index];
-                        return ListTile(
-                          leading: CircleAvatar(
-                            backgroundColor: AppTheme.primaryPurple.withOpacity(0.1),
-                            child: Text(user.firstName[0], style: const TextStyle(color: AppTheme.primaryPurple, fontWeight: FontWeight.bold)),
-                          ),
-                          title: Text(
-                            '${user.firstName} ${user.lastName}',
-                            style: TextStyle(color: isAura ? Colors.white : Colors.black87, fontWeight: FontWeight.w600),
-                          ),
-                          subtitle: Text(
-                            user.email,
-                            style: TextStyle(color: isAura ? Colors.white54 : Colors.grey),
-                          ),
-                          trailing: Icon(Icons.edit_outlined, size: 16, color: isAura ? Colors.white24 : Colors.grey),
-                          onTap: () => _showUserDetail(context, user, isAura),
+                  Divider(color: isAura ? Colors.white10 : Colors.grey.shade200),
+                  Flexible(
+                    child: FutureBuilder<List<User>>(
+                      future: context.read<UserProvider>().getUsersByRole(role),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        }
+                        final users = snapshot.data ?? [];
+                        if (users.isEmpty) {
+                          return Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.person_off_outlined, size: 64, color: Colors.grey.shade300),
+                                const SizedBox(height: 16),
+                                Text('No hay $title registrados', style: const TextStyle(color: Colors.grey)),
+                              ],
+                            ),
+                          );
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: users.length,
+                          itemBuilder: (context, index) {
+                            final user = users[index];
+                            return ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: AppTheme.primaryPurple.withOpacity(0.1),
+                                child: Text(user.firstName[0], style: const TextStyle(color: AppTheme.primaryPurple, fontWeight: FontWeight.bold)),
+                              ),
+                              title: Text(
+                                '${user.firstName} ${user.lastName}',
+                                style: TextStyle(color: isAura ? Colors.white : Colors.black87, fontWeight: FontWeight.w600),
+                              ),
+                              subtitle: Text(
+                                user.email,
+                                style: TextStyle(color: isAura ? Colors.white54 : Colors.grey),
+                              ),
+                              trailing: Icon(Icons.edit_outlined, size: 16, color: isAura ? Colors.white24 : Colors.grey),
+                              onTap: () => _showUserDetail(context, user, isAura, onChanged: () {
+                                setDialogState(() {});
+                              }),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                ),
-              ),
-            ],
+                    ),
+                  ),
+                ],
+              );
+            }
           ),
         ),
       ),
     );
   }
 
-  void _showUserDetail(BuildContext context, User user, bool isAura) {
+  void _showUserDetail(BuildContext context, User user, bool isAura, {VoidCallback? onChanged}) {
     showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -321,12 +327,25 @@ class _AdminDashboardState extends State<AdminDashboard> {
                       child: const Text('CERRAR'),
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 8),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      _confirmDeleteUser(context, user, onChanged: onChanged);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red.shade400,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                    ),
+                    child: const Icon(Icons.delete_outline, size: 18),
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        _showEditUserDialog(context, user, isAura);
+                        _showEditUserDialog(context, user, isAura, onChanged: onChanged);
                       },
                       child: const Text('EDITAR'),
                     ),
@@ -336,6 +355,49 @@ class _AdminDashboardState extends State<AdminDashboard> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _confirmDeleteUser(BuildContext context, User user, {VoidCallback? onChanged}) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('¿Desactivar Usuario? ⚠️'),
+        content: Text('¿Está seguro de que desea desactivar la cuenta de ${user.firstName} ${user.lastName}? El usuario ya no podrá iniciar sesión.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('CANCELAR'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                final success = await context.read<UserProvider>().deleteUser(user.id);
+                if (success && mounted) {
+                  Navigator.pop(context); // Close confirm
+                  context.read<CourseProvider>().fetchDashboardData(); // Refresh stats
+                  if (onChanged != null) onChanged();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Usuario desactivado correctamente 🗑️'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error al desactivar: $e'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('DESACTIVAR'),
+          ),
+        ],
       ),
     );
   }
@@ -355,7 +417,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  void _showEditUserDialog(BuildContext context, User user, bool isAura) {
+  void _showEditUserDialog(BuildContext context, User user, bool isAura, {VoidCallback? onChanged}) {
     final firstNameController = TextEditingController(text: user.firstName);
     final lastNameController = TextEditingController(text: user.lastName);
     final emailController = TextEditingController(text: user.email);
@@ -379,7 +441,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
               'firstName': firstNameController.text,
               'lastName': lastNameController.text,
               'email': emailController.text,
-            }),
+            }, onChanged: onChanged),
             child: const Text('GUARDAR CAMBIOS'),
           ),
         ],
@@ -387,7 +449,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
     );
   }
 
-  void _confirmUpdate(BuildContext context, User user, Map<String, String> data) {
+  void _confirmUpdate(BuildContext context, User user, Map<String, String> data, {VoidCallback? onChanged}) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -402,6 +464,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 if (success && mounted) {
                   Navigator.pop(context); // Close confirm
                   Navigator.pop(context); // Close edit
+                  if (onChanged != null) onChanged();
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('¡Usuario actualizado con éxito! ✅'), backgroundColor: Colors.green),
                   );
