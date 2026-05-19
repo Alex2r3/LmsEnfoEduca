@@ -9,7 +9,7 @@ const cache = require('../middleware/cache');
 // GET /api/courses - Get courses for current user (Cached for 30s)
 router.get('/', authenticate, cache(30), async (req, res) => {
   try {
-    let query = {};
+    let query = { isActive: { $ne: false } };
     const { role } = req.user;
 
     if (role === 'profesor') {

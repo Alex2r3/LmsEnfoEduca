@@ -78,4 +78,34 @@ class CourseProvider extends ChangeNotifier {
       rethrow;
     }
   }
+
+  Future<bool> enrollStudent(String courseId, String studentId) async {
+    try {
+      final response = await ApiService.post('/courses/$courseId/enroll', {
+        'studentIds': [studentId]
+      });
+      if (response != null) {
+        await fetchCourses();
+        await fetchDashboardData();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<bool> deleteCourse(String courseId) async {
+    try {
+      final response = await ApiService.delete('/courses/$courseId');
+      if (response != null) {
+        await fetchCourses();
+        await fetchDashboardData();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

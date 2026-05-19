@@ -23,6 +23,7 @@ class ProfileScreen extends StatelessWidget {
       body: Container(
         decoration: isAura ? AppTheme.auraGradient : null,
         child: CustomScrollView(
+          key: const PageStorageKey('profile_scroll_key'),
           slivers: [
             SliverAppBar(
               expandedHeight: 200,

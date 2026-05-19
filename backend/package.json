@@ -4,6 +4,7 @@
   "description": "EnfoEduca LMS Backend - Node.js + Express + MongoDB",
   "main": "server.js",
   "scripts": {
+    "test": "jest",
     "start": "node server.js",
     "micro": "concurrently \"npm run gateway\" \"npm run auth\" \"npm run academic\" \"npm run user\"",
     "gateway": "node gateway/gateway.js",
@@ -29,6 +30,7 @@
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
+    "jest": "^30.4.2",
     "nodemon": "^3.1.4"
   }
 }

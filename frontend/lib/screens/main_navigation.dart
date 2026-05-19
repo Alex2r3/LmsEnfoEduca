@@ -8,6 +8,7 @@ import 'dashboard/admin_dashboard.dart';
 import 'course/courses_screen.dart';
 import 'profile/profile_screen.dart';
 import '../config/app_theme.dart';
+import '../../providers/theme_provider.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -22,6 +23,8 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     final user = context.watch<AuthProvider>().user;
+    final isAura = context.watch<ThemeProvider>().currentMode == CustomThemeMode.aura;
+    
     if (user == null) return const Scaffold(body: Center(child: CircularProgressIndicator()));
 
     // Define dashboard based on role
@@ -58,10 +61,10 @@ class _MainNavigationState extends State<MainNavigation> {
               selectedIndex: _selectedIndex,
               onDestinationSelected: (index) => setState(() => _selectedIndex = index),
               labelType: NavigationRailLabelType.all,
-              backgroundColor: AppTheme.darkCard,
-              unselectedIconTheme: const IconThemeData(color: Colors.white54),
+              backgroundColor: isAura ? const Color(0xFF1E1E3F) : AppTheme.darkCard,
+              unselectedIconTheme: IconThemeData(color: isAura ? Colors.white38 : Colors.white54),
               selectedIconTheme: const IconThemeData(color: Colors.white),
-              unselectedLabelTextStyle: const TextStyle(color: Colors.white54),
+              unselectedLabelTextStyle: TextStyle(color: isAura ? Colors.white38 : Colors.white54),
               selectedLabelTextStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               leading: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 24),
@@ -85,6 +88,8 @@ class _MainNavigationState extends State<MainNavigation> {
       bottomNavigationBar: NavigationBar(
         selectedIndex: _selectedIndex,
         onDestinationSelected: (index) => setState(() => _selectedIndex = index),
+        backgroundColor: isAura ? const Color(0xFF1E1E3F) : null,
+        indicatorColor: isAura ? Colors.white10 : null,
         destinations: const [
           NavigationDestination(icon: Icon(Icons.dashboard_outlined), selectedIcon: Icon(Icons.dashboard), label: 'Inicio'),
           NavigationDestination(icon: Icon(Icons.book_outlined), selectedIcon: Icon(Icons.book), label: 'Cursos'),
