@@ -6,6 +6,7 @@ node_modules/
 .env.*
 *.log
 *.class
+*.iml
 .DS_Store
 Thumbs.db
 .vscode/
